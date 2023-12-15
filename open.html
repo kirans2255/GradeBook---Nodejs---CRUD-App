@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nova+Square&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nova Square', sans-serif;
+            margin: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        section {
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .but {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: teal;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .but:hover {
+            background-color: darkcyan;
+        }
+
+        h2 {
+            color: rgb(1, 81, 81);
+            font-size: 25px;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        button {
+            height: 33px;
+            width: 100px;
+            font-size: 16px;
+            margin-left: 700px;
+            background-color: rgb(83, 216, 76);
+            border-color: white;
+            font-family: 'Open Sans', sans-serif;
+            color: rgb(0, 0, 0);
+
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+    </header>
+
+    <section>
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th class="first">Id</th>
+                    <th>Reg.No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Degree</th>
+                    <th>Semester</th>
+                    <th>Grade</th>
+                    <th colspan="2" style="text-align: center;">Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+                <!-- This is where the table rows will be populated dynamically -->
+            </tbody>
+        </table>
+    </section>
+
+    <button class="but" id="submit" onclick="home()"><b>Home</b></button>
+
+
+
+    <div class="edit" style="display: none;">
+        <h2>Reg.No</h2>
+        <input type="number" placeholder="Enter Id" id="number">
+        <small id="numberError" style="color: red;"></small>
+
+        <h2>Name</h2>
+        <input type="text" placeholder="Enter Name" id="name">
+        <small id="nameError" style="color: red;"></small>
+
+        <h2>E-mail</h2>
+        <input type="email" placeholder="Enter Email" id="mail">
+        <small id="mailError" style="color: red;"></small>
+
+        <h2>Degree</h2>
+        <input type="text" placeholder="Enter Degree" id="de">
+        <small id="degreeError" style="color: red;"></small>
+
+
+        <h2>Semester</h2>
+        <select id="sem">
+            <option value="Semester 1">Semester 1</option>
+            <option value="Semester 2">Semester 2</option>
+            <option value="Semester 3">Semester 3</option>
+            <option value="Semester 4">Semester 4</option>
+            <option value="Semester 5">Semester 5</option>
+            <option value="Semester 6">Semester 6</option>
+        </select>
+        <small id="semError" style="color: red;"></small>
+
+        <h2>Grade</h2>
+        <select id="gde">
+            <option value="Distinction">Distinction</option>
+            <option value="First Class">First class</option>
+            <option value="Second Class">Second Class</option>
+            <option value="Fail">Fail</option>
+
+        </select>
+        <small id="gradeError" style="color: red;"></small>
+        <br><button id="submitEdit">SUBMIT</button>
+        <br><button onclick="window.location.href='./open'" id="cancel">CANCEL</button>
+
+    </div>
+
+
+    <script>
+        fetch('userData', {
+            method: 'GET'
+        })
+            .then(response => response.json())//body contain json it read as js OBJECT NOW
+            .then(data => {
+                const userdata = document.querySelector("#tableBody");
+
+                data.forEach(datas => {
+                    const newRowCreate = document.createElement('tr');
+                    newRowCreate.innerHTML =
+                        `
+                <td >${datas.id}</td>
+                <td class="number" >${datas.number}</td>
+                <td class="name">${datas.name}</td>
+                <td class="mail">${datas.email}</td>
+                <td class="degree">${datas.degree}</td>
+                <td class="sem">${datas.sem}</td>
+                <td class="grade">${datas.grade}</td>
+                <td><button style="padding: 4px; margin-left: 24px;" onclick="modifyUser(${datas.id},'${datas.name}')">Edit</button>
+                <button style="margin-top:10px;padding: 4px;margin-left: 24px" onclick="deleteUser(${datas.id})" >Delete</button>
+                </td>
+                         `;
+                    userdata.appendChild(newRowCreate)
+                });
+
+
+            })
+
+            .catch(error => console.error("error in geting the data"))
+
+
+        //edit
+        function modifyUser(userId, name) {
+            document.querySelector(".edit").style.display = "block"
+            document.querySelector("#name").value = name
+            document.querySelector("#number").value = document.getElementsByClassName("number")[userId - 1].textContent
+            document.querySelector("#mail").value = document.getElementsByClassName("mail")[userId - 1].textContent
+            document.querySelector("#de").value = document.getElementsByClassName("degree")[userId - 1].textContent
+            document.querySelector("#sem").value = document.getElementsByClassName("sem")[userId - 1].textContent
+            document.querySelector("#gde").value = document.getElementsByClassName("grade")[userId - 1].textContent
+
+            document.querySelector("#submitEdit").addEventListener("click", () => {
+                let name = document.querySelector("#name").value
+                let number = document.querySelector("#number").value
+                let email = document.querySelector("#mail").value
+                let degree = document.querySelector("#de").value
+                let sem = document.querySelector("#sem").value
+                let grade = document.querySelector("#gde").value
+
+                let isnameValid = /^[a-zA-Z\s]{3,}$/.test(name);
+                let isnumberValid = /^\d{5,}$/.test(number);
+                let isemailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+                let isdegreeValid = /^[a-zA-Z\s]{10,}$/.test(degree);
+                let issemValid = sem !== "";
+                let isgradeValid = grade !== "";
+
+
+
+                if (!isnameValid || !isnumberValid || !isemailValid || !isdegreeValid || !issemValid || !isgradeValid) {
+                    if (!isnameValid) {
+                        document.querySelector("#nameError").innerHTML = "Minimum 5 Letters Required /Avoid Speacial Characters "
+                    } else {
+                        document.querySelector("#nameError").innerHTML = ""
+                    }
+                    if (!isnumberValid) {
+                        document.querySelector("#numberError").innerHTML = "5 Digits Required"
+                    } else {
+                        document.querySelector("#numberError").innerHTML = ""
+                    }
+                    if (!isemailValid) {
+                        document.querySelector("#mailError").innerHTML = "Invalid Format"
+                    } else {
+                        document.querySelector("#mailError").innerHTML = ""
+                    } if (!isdegreeValid) {
+                        document.querySelector("#degreeError").innerHTML = "Minimum 10 Letters needed"
+                    } else {
+                        document.querySelector("#degreeError").innerHTML = ""
+                    }
+                    if (!issemValid) {
+                        document.querySelector("#semError").innerHTML = "Required"
+                    } else {
+                        document.querySelector("#semError").innerHTML = ""
+                    }
+                    if (!isgradeValid) {
+                        document.querySelector("#gradeError").innerHTML = "Required"
+                    } else {
+                        document.querySelector("#gradeError").innerHTML = ""
+                    }
+
+                } else {
+
+                    const updatedUserData = {
+                        id: userId,
+                        number: number,
+                        name: name,
+                        email: email,
+                        degree: degree,
+                        sem: sem,
+                        grade: grade,
+                    };
+                    console.log(updatedUserData)
+
+                    fetch(`/modifyUser/${userId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(updatedUserData),//convert to json format
+                    })
+                        .then(response => { //data modified server give the response
+                            if (response.status === 200) {
+                                console.log('User data updated successfully.');
+                                alert("USER DATA MODIFIED")
+                                window.location.href = '/open'//reload the page
+
+                            } else {
+                                console.log('Error updating user data:', response.status, response.statusText);
+                            }
+                        });
+
+                }
+            })
+
+        }
+
+        //delete
+        function deleteUser(userId) {
+            fetch('/deleteUser/' + userId, {//passed id in delete method 
+                method: 'DELETE'
+
+            })
+                .then(response => {
+                    if (response.status == 200) {
+                        alert("User Details Successfully DELETED")
+                        window.location.href = '/open'
+                    } else {
+                        console.log("error to delete,bad response");
+                    }
+
+                })
+
+        }
+
+        function home() { //home
+            window.location.href = '/'
+
+        }
+
+    </script>
+
+</body>
+
+</html>
