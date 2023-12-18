@@ -160,6 +160,7 @@
 
             <h2>Semester</h2>
             <select id="sem">
+                <option value="" disabled selected>Choose The Semester</option>
                 <option value="Semester 1">Semester 1</option>
                 <option value="Semester 2">Semester 2</option>
                 <option value="Semester 3">Semester 3</option>
@@ -171,6 +172,7 @@
 
             <h2>Grade</h2>
             <select id="gde">
+                <option value="" disabled selected>Choose The Grade</option>
                 <option value="Distinction">Distinction</option>
                 <option value="First Class">First class</option>
                 <option value="Second Class">Second Class</option>
@@ -202,14 +204,12 @@
                 let isnumberValid = /^\d{5,}$/.test(number);
                 let isemailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
                 let isdegreeValid = /^[a-zA-Z\s]{10,}$/.test(degree);
-                let issemValid = sem !== "";
-                let isgradeValid = grade !== "";
-
-
+                let issemValid = sem !== "" && sem !== "Semester";
+                let isgradeValid = grade !== "" && grade !== "grade";
 
                 if (!isnameValid || !isnumberValid || !isemailValid || !isdegreeValid || !issemValid || !isgradeValid) {
                     if (!isnameValid) {
-                        document.querySelector("#nameError").innerHTML = "Minimum 5 Letters Required /Avoid Speacial Characters "
+                        document.querySelector("#nameError").innerHTML = "Minimum 5 Letters Required / Avoid Special Characters "
                     } else {
                         document.querySelector("#nameError").innerHTML = ""
                     }
@@ -222,18 +222,19 @@
                         document.querySelector("#mailError").innerHTML = "Invalid Format"
                     } else {
                         document.querySelector("#mailError").innerHTML = ""
-                    } if (!isdegreeValid) {
+                    }
+                    if (!isdegreeValid) {
                         document.querySelector("#degreeError").innerHTML = "Minimum 10 Letters needed"
                     } else {
                         document.querySelector("#degreeError").innerHTML = ""
                     }
                     if (!issemValid) {
-                        document.querySelector("#semError").innerHTML = "Required"
+                        document.querySelector("#semError").innerHTML = "Choose a Semester"
                     } else {
                         document.querySelector("#semError").innerHTML = ""
                     }
                     if (!isgradeValid) {
-                        document.querySelector("#gradeError").innerHTML = "Required"
+                        document.querySelector("#gradeError").innerHTML = "Choose a Grade"
                     } else {
                         document.querySelector("#gradeError").innerHTML = ""
                     }
